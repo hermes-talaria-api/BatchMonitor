@@ -26,7 +26,7 @@ public class SchedulerService {
 
     private final TestBatchConfig batchConfig;
 
-    @Scheduled(cron = "0/5 * * * * *")
+    @Scheduled(cron = "0/10 * * * * *")
     public void runJob() {
 
         // job parameter 설정
@@ -35,7 +35,7 @@ public class SchedulerService {
         JobParameters jobParameters = new JobParameters(confMap);
         log.info("스케줄링 중");
         try {
-            jobLauncher.run(batchConfig.ExampleJob(), jobParameters);
+            jobLauncher.run(batchConfig.fileJob(), jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
 

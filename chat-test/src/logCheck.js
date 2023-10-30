@@ -2,8 +2,6 @@ import './App.css';
 import { useState , useRef, useEffect} from 'react';
 import * as StompJs from '@stomp/stompjs';
 
-
-
 function LogCheck(){
 
 /*stomp 관련 */
@@ -33,10 +31,10 @@ function LogCheck(){
   const subscribe = () => {
       client.current.subscribe('/sub/log', (res) => { // server에게 메세지 받으면
         // console.log(res)
-        // const json_body = JSON.parse(res.body);
-        // console.log(json_body);
+        const json_body = JSON.parse(res.body);
+        console.log(json_body);
         // setLog(json_body);
-        console.log(res.body);
+        // console.log(res.body);
       });
     };
 
