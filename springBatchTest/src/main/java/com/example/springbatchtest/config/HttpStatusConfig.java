@@ -11,16 +11,10 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -42,12 +36,24 @@ public class HttpStatusConfig {
         System.out.println("시작");
         return jobBuilderFactory.get("httpStatus")
                 .incrementer(new RunIdIncrementer())
-                .start(flatFileItemReaderStep())// log 파일 불러오기 List<LogDto> 생성
-                .next(checkConnectionCountStep())
+                .start(flatFileItemReaderStep())
+                .next(checkConnectionCountStep())//
                 .next(sendLogFileToFrontStep()) // 프론트 단에 보내주기
                 .build();
     }
 
+    // 로그 파일을 불러오고 5초동안 요청한 로그 DTO들을 가져오는 스탭
+    @Bean
+    public Step flatFileItemReaderStep() {
+        return stepBuilderFactory.get("flatFileItemReader")
+                .tasklet((contribution, chunkContext) ->{
+                    logDataList = logParser.parseLog("C:/Users/SSAFY/Desktop/Project/BatchMonitor/springBatchTest/log.txt");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    // 모니터링에 보여줄 모니터링DTO를 변환해주는 스탭
     @Bean
     public Step checkConnectionCountStep() {
         return stepBuilderFactory.get("checkConnection")
@@ -58,6 +64,7 @@ public class HttpStatusConfig {
                 .build();
     }
 
+    // 웹 소켓으로 모니터링 정보를 보내주는 스탭
     @Bean
     public Step sendLogFileToFrontStep() {
         return stepBuilderFactory.get("sendLogFileFront")
@@ -68,16 +75,7 @@ public class HttpStatusConfig {
                 .build();
     }
 
-    // log 파일을 불러오는 Step
-    @Bean
-    public Step flatFileItemReaderStep() {
-        return stepBuilderFactory.get("flatFileItemReader")
-                .tasklet((contribution, chunkContext) ->{
-                    logDataList = logParser.parseLog("C:/Users/SSAFY/Desktop/Project/BatchMonitor/springBatchTest/log.txt");
-                    return RepeatStatus.FINISHED;
-                })
-                .build();
-    }
+
 
 
 }
