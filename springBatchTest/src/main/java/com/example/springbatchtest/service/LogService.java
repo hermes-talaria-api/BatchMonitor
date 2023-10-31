@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class LogService {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    public void sendMessageToClient(String destination, LogDto message) {
+    public void sendMessageToClient(String destination, Object message) {
         log.info("message : {}" , message);
         simpMessagingTemplate.convertAndSend(destination, message);
     }
