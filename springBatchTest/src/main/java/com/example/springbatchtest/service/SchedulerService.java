@@ -1,5 +1,6 @@
 package com.example.springbatchtest.service;
 
+import com.example.springbatchtest.config.HttpStatusConfig;
 import com.example.springbatchtest.config.TestBatchConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,9 @@ public class SchedulerService {
 
     private final JobLauncher jobLauncher;
 
-    private final TestBatchConfig batchConfig;
+    private final HttpStatusConfig httpStatusConfig;
 
-    @Scheduled(cron = "0/5 * * * * *")
+    @Scheduled(cron = "0/5 * * * * *") // cron 표기법
     public void runJob() {
 
         // job parameter 설정
@@ -35,7 +36,7 @@ public class SchedulerService {
         JobParameters jobParameters = new JobParameters(confMap);
         log.info("스케줄링 중");
         try {
-            jobLauncher.run(batchConfig.ExampleJob(), jobParameters);
+            jobLauncher.run(httpStatusConfig.HttpStatusJob(), jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
                  | JobParametersInvalidException | org.springframework.batch.core.repository.JobRestartException e) {
 

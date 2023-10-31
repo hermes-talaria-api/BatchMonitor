@@ -1,17 +1,22 @@
 package com.example.springbatchtest.dto;
 
 import lombok.Data;
+import lombok.ToString;
+
+import java.util.Date;
 
 @Data
+@ToString
 public class LogDto {
     String ip;
-    String date;
+    Date date;
     String method;
     String status;
     String protocol;
     String url;
+    // 시간 값
 
-    public LogDto(String ip, String date, String method, String url, String status) {
+    public LogDto(String ip, Date date, String method, String url, String status) {
         this.ip = ip;
         this.date = date;
         this.method = method;

@@ -44,13 +44,13 @@ public class TestBatchConfig {
     public Step Step() {
         return stepBuilderFactory.get("step")
                 .tasklet((contribution, chunkContext) -> {
-                    log.info("Step!");
-                    try (FileInputStream fis = new FileInputStream("C:/Users/SSAFY/Desktop/git/springBatchTest/log.txt");
+                    // log.info("Step!");
+                    try (FileInputStream fis = new FileInputStream("C:/Users/SSAFY/Desktop/Project/BatchMonitor/springBatchTest/log.txt");
                          BufferedReader br = new BufferedReader(new InputStreamReader(fis))) {
                         String line;
                         while ((line = br.readLine()) != null) {
                             // 파일에서 한 줄씩 읽음
-                            System.out.println(line);
+                            // System.out.println(line);
                             logService.sendMessageToClient("/sub/log",line);
                         }
                     } catch (IOException e) {
